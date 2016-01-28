@@ -23,9 +23,7 @@ describe('Runner', function() {
 		username: config.username,
 		accesskey: config.accesskey,
 		browsers: [{
-			browserName: 'chrome',
-			version: 39,
-			name: 'runner.spec.js'
+			browserName: 'chrome'
 		}]
 	});
 

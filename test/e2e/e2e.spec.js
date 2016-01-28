@@ -59,13 +59,13 @@ var expectedMetrics = {
 describe('End To End Test Cases', function() {
 	it('fails if selenium is not running', function(done) {
 		this.timeout(60*1000);
-		browserPerf('http://google.com', function(err, res) {
+		browserPerf('http://google.com', {
+			selenium: 'nohost:4444'
+		}, function(err, res) {
 			expect(err).to.not.be.null;
 			expect(err).to.not.be.empty;
 			expect(res).to.be.empty;
 			done();
-		}, {
-			selenium: 'nohost:4444'
 		});
 	});
 
@@ -73,10 +73,18 @@ describe('End To End Test Cases', function() {
 		this.timeout(2 * 60 * 1000); // 2 minutes for E2E tests
 		it('should work for a sample page', function(done) {
 			var url = 'http://nparashuram.com/perfslides/';
-			browserPerf(url, function(err, res) {
+			browserPerf(url, {
+				selenium: process.env.SELENIUM || 'http://localhost:4444/wd/hub',
+				browsers: [{
+					browserName: 'chrome'
+				}, {
+					browserName: 'firefox'
+				}]
+			}, function(err, res) {
 				if (err) {
 					console.log(err);
 				}
+				console.log(err);
 				expect(err).to.be.empty;
 				expect(res).to.not.be.empty;
 				res.forEach(function(data) {
@@ -85,19 +93,6 @@ describe('End To End Test Cases', function() {
 					expect(data).to.include.keys(expectedMetrics[data._browserName]);
 				});
 				done();
-			}, {
-				selenium: process.env.SELENIUM || 'http://localhost:4444/wd/hub',
-				username: process.env.USERNAME,
-				accesskey: process.env.ACCESSKEY,
-				browsers: [{
-					browserName: 'chrome',
-					version: 46,
-					name: 'Browserperf-E2E Tests'
-				}, {
-					browserName: 'firefox',
-					version: 33,
-					name: 'Browserperf-E2E Tests'
-				}]
 			});
 		});
 	});
